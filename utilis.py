@@ -49,7 +49,7 @@ def findFace(img):
     else:
         return img, [[0,0],0]
 
-def trackFace(myDrone, info, w, pid, pError):
+def trackFace(myDrone, info, w, pid, pError,pError_area):
     #PID control==> smooth running of drone
     error = info[0][0] - w//2
     speed = pid[0]*error + pid[1]*(error - pError)# repeat these three line including area for forwad and backward & send speed down below
@@ -57,19 +57,47 @@ def trackFace(myDrone, info, w, pid, pError):
     speed = int(np.clip(speed, -100, 100))
 
     print(speed)
-    #sending commands to drone
+#     #sending commands to drone
+#     if info[0][0] != 0:
+#         myDrone.yaw_velocity =speed
+#     else:
+#         myDrone.for_back_velocity = 0
+#         myDrone.left_right_velocity = 0
+#         myDrone.up_down_velocity = 0
+#         myDrone.yaw_velocity = 0
+#         error =0
+# #mathi ko set garya aba send garya
+#     if myDrone.send_rc_control:
+#         myDrone.send_rc_control(myDrone.left_right_velocity, 
+#         myDrone.for_back_velocity, myDrone.up_down_velocity, 
+#         myDrone.yaw_velocity)
+
+#     return error
+
+    # PID - forward back
+    area_ideal = 1000
+    error_area = info[1] - area_ideal
+    speed_forward = pid[0] * error_area + pid[1] * (error_area - pError_area)
+    # Constrain the speed
+    speed_forward = int(np.clip(speed_forward, -100, 100))
+    print(speed_forward)
+
     if info[0][0] != 0:
-        myDrone.yaw_velocity =speed
+        myDrone.yaw_velocity = speed
+        myDrone.for_back_velocity = speed_forward
+
     else:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
         myDrone.up_down_velocity = 0
         myDrone.yaw_velocity = 0
-        error =0
-#mathi ko set garya aba send garya
-    if myDrone.send_rc_control:
-        myDrone.send_rc_control(myDrone.left_right_velocity, 
-        myDrone.for_back_velocity, myDrone.up_down_velocity, 
-        myDrone.yaw_velocity)
+        myDrone.speed = 0
+        error = 0
 
-    return error
+    if myDrone.send_rc_control:
+        myDrone.send_rc_control(myDrone.for_back_velocity,
+                                 myDrone.left_right_velocity,
+                                 myDrone.up_down_velocity,
+                                 myDrone.yaw_velocity)
+    return error, error_area
+

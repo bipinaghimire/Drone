@@ -6,6 +6,7 @@ w,h = 360,240
 
 pid = [0.5,0.5,0]
 pError = 0
+pError_area = 0
 startCounter = 0 # for no flight 1 - for flight 0 
 myDrone = initialize_tello()
 
@@ -22,7 +23,7 @@ while True:
     print(info[0][0])
 
 
-    pError = trackFace(myDrone, info, w, pid, pError)
+    pError, pError_area = trackFace(myDrone, info, w, pid, pError_area)
     cv2.imshow('Image', img)
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):

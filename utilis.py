@@ -1,7 +1,9 @@
 from djitellopy import Tello
 import cv2
 import numpy as np
-from time import sleep
+
+
+
 
 def initialize_tello():
     myDrone = Tello()
@@ -86,7 +88,22 @@ def trackFace(myDrone, info, w, pid, pError,pError_area):
 
     if info[0][0] != 0:
         myDrone.yaw_velocity = speed
-        myDrone.for_back_velocity = speed_forward
+
+
+        if (error_area == 0) or (6000 < error_area < 17000):
+            myDrone.for_back_velocity  = 0
+
+        # If area is below 6000, that means the drone should forward.
+        # If the forward/backward velocity is negative, it means
+        # the drone moves backward. Otherwise, it moves forward
+        elif error_area <= 6000:
+            myDrone.for_back_velocity = 20
+
+        # If area is above 17000, that means the drone should move backward
+        # but with the same speed
+        else:
+            myDrone.for_back_velocity  = -20
+
 
     else:
         myDrone.for_back_velocity = 0

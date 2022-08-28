@@ -13,6 +13,7 @@ myDrone = initialize_tello()
 while True:
     #Flight
     if startCounter == 0:
+        print("Battery: " , myDrone.get_battery())
         myDrone.takeoff()
         startCounter = 1
     # Get the frame from the drone
@@ -20,10 +21,10 @@ while True:
 
     img, info = findFace(img)
     #print cx and cy of first face
-    print(info[0][0])
+    # print(info[0][0])
 
 
-    pError, pError_area = trackFace(myDrone, info, w, pid, pError_area)
+    pError, pError_area = trackFace(myDrone, info, w, pid,pError, pError_area)
     cv2.imshow('Image', img)
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):

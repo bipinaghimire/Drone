@@ -1,6 +1,7 @@
 from djitellopy import Tello
 import cv2
 import numpy as np
+from time import sleep
 
 def initialize_tello():
     myDrone = Tello()
@@ -52,11 +53,12 @@ def findFace(img):
 def trackFace(myDrone, info, w, pid, pError,pError_area):
     #PID control==> smooth running of drone
     error = info[0][0] - w//2
+    print("info: ", info[0][0])
     speed = pid[0]*error + pid[1]*(error - pError)# repeat these three line including area for forwad and backward & send speed down below
     #makes sure the drone doesn't go out of bounds
     speed = int(np.clip(speed, -100, 100))
 
-    print(speed)
+    print("Speed: " , speed)
 #     #sending commands to drone
 #     if info[0][0] != 0:
 #         myDrone.yaw_velocity =speed
@@ -75,12 +77,12 @@ def trackFace(myDrone, info, w, pid, pError,pError_area):
 #     return error
 
     # PID - forward back
-    area_ideal = 1000
-    error_area = info[1] - area_ideal
+    # area_ideal = 1000
+    error_area = info[0][0] - w//2
     speed_forward = pid[0] * error_area + pid[1] * (error_area - pError_area)
     # Constrain the speed
     speed_forward = int(np.clip(speed_forward, -100, 100))
-    print(speed_forward)
+    print("speed_forward" , speed_forward)
 
     if info[0][0] != 0:
         myDrone.yaw_velocity = speed
@@ -94,10 +96,23 @@ def trackFace(myDrone, info, w, pid, pError,pError_area):
         myDrone.speed = 0
         error = 0
 
+
+
     if myDrone.send_rc_control:
-        myDrone.send_rc_control(myDrone.for_back_velocity,
-                                 myDrone.left_right_velocity,
+
+        print(" ")
+
+        print("left right speed : ", myDrone.left_right_velocity)
+        print("for back speed : ", myDrone.for_back_velocity)
+        print("up down speed : ", myDrone.up_down_velocity)
+        print("yaw speed : ", myDrone.yaw_velocity)
+        
+        print(" ")
+
+        myDrone.send_rc_control(myDrone.left_right_velocity,
+                                 myDrone.for_back_velocity,
                                  myDrone.up_down_velocity,
                                  myDrone.yaw_velocity)
+                                 
     return error, error_area
 

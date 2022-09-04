@@ -22,15 +22,15 @@ cv2.createTrackbar("SAT Max", "HSV", 255, 255, empty)
 cv2.createTrackbar("VALUE Min", "HSV", 0, 255, empty)
 cv2.createTrackbar("VALUE Max", "HSV", 255, 255, empty)
 
-cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(0)
 frameCounter = 0
 while True:
-    # img = mydrone.get_frame_read().frame
+    img = mydrone.get_frame_read().frame
 
-    _, img = cap.read()
+    #_, img = cap.read()
 
     img = cv2.resize(img, (frameWidth, frameHeight))
-    #img = cv2.flip(img, 0)
+    img = cv2.flip(img, 0)
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     h_min = cv2.getTrackbarPos("HUE Min", "HSV")
@@ -52,5 +52,5 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cap.release()
+#cap.release()
 cv2.destroyAllWindows()

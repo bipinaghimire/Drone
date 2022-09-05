@@ -2,7 +2,7 @@ import cv2
 import imutils
 import numpy as np
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Python\Python310\Scripts\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 
 img = cv2.imread('vLP.jpg',cv2.IMREAD_COLOR)
 img = cv2.resize(img, (600,400) )

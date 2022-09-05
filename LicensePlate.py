@@ -49,7 +49,6 @@ print("Detected license plate Number is:",text)
 img = cv2.resize(img,(500,300))
 Cropped = cv2.resize(Cropped,(400,200))
 cv2.imshow('car',img)
-cv2.imshow('Cropped',Cropped)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

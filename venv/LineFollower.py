@@ -6,8 +6,8 @@ mydrone = tello.Tello()
 mydrone.connect()
 print(mydrone.get_battery())
 
-mydrone.stream_on()
-mydrone.takeoff()
+mydrone.streamon()
+# mydrone.takeoff()
 
 cap = cv2.VideoCapture(0)
 # detecting white paper only
@@ -94,7 +94,8 @@ def sendCommands(senOut, cx):
 while True:
     #_, img = cap.read()
     img = mydrone.get_frame_read()
-    img = cv2.resize(img, (width, height))
+    myFrame = img.frame
+    img = cv2.resize(myFrame, (width, height))
     img = cv2.flip(img, 1)
 
     imgThreshold = thresholding(img)
